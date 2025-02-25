@@ -1,12 +1,10 @@
-import dotenv from 'dotenv';  // Import dotenv
-dotenv.config();  // Call dotenv.config() before anything else
+import dotenv from 'dotenv';
+dotenv.config();
 
-import 'reflect-metadata'; 
+import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
-// ... existing code ...
-import { AppDataSource } from './_helpers/db';
-// ... existing code ...
+import { initializeDatabase } from './_helpers/db';
 import userRouter from './users/user.controller';
 import { errorHandler } from './_middleware/error-handler';
 
@@ -18,6 +16,13 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 4000;
 
-AppDataSource.initialize().then(() => {
-    app.listen(port, () => console.log(`Server listening on port ${port}`));
-}).catch(err => console.error('Database connection error:', err));
+initializeDatabase()
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server listening on port ${port}`);
+        });
+    })
+    .catch(error => {
+        console.error('Server startup error:', error);
+        process.exit(1);
+    });

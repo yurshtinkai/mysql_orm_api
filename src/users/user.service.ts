@@ -19,8 +19,8 @@ export class UserService {
             throw new Error(`Email ${data.email} is already registered`);
         }
 
-        if (data.passwordHash) {
-            data.passwordHash = await bcrypt.hash(data.passwordHash, 10);
+        if (data.password) { 
+            data.password = await bcrypt.hash(data.password, 10);  
         }
 
         const user = this.userRepository.create(data);
@@ -31,8 +31,8 @@ export class UserService {
         const user = await this.getById(id);
         if (!user) throw new Error('User not found');
 
-        if (data.passwordHash) {
-            data.passwordHash = await bcrypt.hash(data.passwordHash, 10);
+        if (data.password) {  
+            data.password = await bcrypt.hash(data.password, 10);  
         }
 
         Object.assign(user, data);
